@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Mega Zenith</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #ff4d4d;
+            --primary-dark: #ff3333;
+            --secondary: #4d79ff;
+            --dark: #0f0f1a;
+            --darker: #090913;
+            --medium: #1a1a2e;
+            --light: #ffffff;
+            --accent: #00ffcc;
+            --accent-purple: #b967ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, var(--darker), var(--dark));
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(20px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(26, 26, 46, 0.8);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo::before {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--accent-purple));
+            margin-right: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 24px;
+        }
+
+        /* Page Content */
+        .page-content {
+            margin-top: 100px;
+            min-height: calc(100vh - 200px);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--light);
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--medium);
+            color: var(--light);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            height: 250px;
+            background: linear-gradient(45deg, var(--medium), var(--darker));
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--accent);
+        }
+
+        .gallery-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Placeholder Images */
+        .placeholder-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: var(--accent);
+            font-size: 3rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            margin: 5% auto;
+            width: 80%;
+            max-width: 1000px;
+            animation: zoom 0.3s ease;
+        }
+
+        @keyframes zoom {
+            from {transform: scale(0.9); opacity: 0;}
+            to {transform: scale(1); opacity: 1;}
+        }
+
+        .modal-image {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .modal-caption {
+            text-align: center;
+            padding: 15px;
+            color: var(--light);
+            font-size: 1.2rem;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: var(--light);
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to top, var(--darker), var(--dark));
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 50px;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .contact-info {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                background: rgba(26, 26, 46, 0.95);
+                backdrop-filter: blur(10px);
+                width: 250px;
+                height: calc(100vh - 70px);
+                flex-direction: column;
+                padding: 40px 20px;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg" id="particles"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Mega Zenith</div>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Home</a>
+                    <a href="review.html">Reviews</a>
+                    <a href="gallery.html" class="active">Gallery</a>
+                    <a href="members.html">members</a>
+                  <a href="sub.html">our full details are this!</a>
+                </div>
+                <button class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container page-content">
+        <!-- Gallery Section -->
+        <section id="gallery">
+            <div class="section-title">
+                <h2>GAMING GALLERY</h2>
+                <p>Explore our collection of epic gaming moments and achievements</p>
+            </div>
+            
+            <!-- Filter Options -->
+            <div class="filter-section">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="screenshots">Screenshots</button>
+                <button class="filter-btn" data-filter="achievements">Achievements</button>
+                <button class="filter-btn" data-filter="team">Team Photos</button>
+                <button class="filter-btn" data-filter="events">Events</button>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div class="gallery-grid">
+                <!-- Item 1 -->
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Victory Royale</h3>
+                        <p class="gallery-desc">Our squad's first win in Warzone</p>
+                    </div>
+                </div>
+                
+                <!-- Item 2 -->
+                <div class="gallery-item" data-category="achievements">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Tournament Champions</h3>
+                        <p class="gallery-desc">Winning the regional eFootball tournament</p>
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUTExIVFRUXGBoXGBcYGBcYGBoYGRgYFxoXFxgYHSggGBolHRgXITEhJSkrLi4uGB8zODMtNygtLisBCgoKDg0OGxAQGy0lHyUtLS0tLS0tLS0tLy0tLS0tLTUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLf/AABEIAKgBLAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAEBQIDBgABB//EADwQAAEDAgQDBQYEBQUAAwAAAAECAxEAIQQFEjFBUWETInGBkQYUMqGx8BVCwdEjUmLh8TNygpKiBxbi/8QAGgEAAwEBAQEAAAAAAAAAAAAAAQIDAAQFBv/EACYRAAICAgIBBAIDAQAAAAAAAAABAhEDIRIxEwQiQVFhkTKhsXH/2gAMAwEAAhEDEQA/APknuFe/h/Stb+HdKmMt6VzeU6/CZJvLZ4UQjJzyrWYTLhMRTpGUpCZMADcnYUPMF4NHzz8FPKu/BTyrdPZKuNbbxE3CVpBTB8goVNjLVTd1pQ4gIIPkddHyoTwv6MD+DHlUF5SeVfSF4FvmKDxGAR+3Wh5hlgZ88Vlp5VE5f0raKy3pVZy3pTeQzwmN9wrz3CtcrBJk8BrKR5Epj5E134d0o8wPDRkF4IgExwoPsa3D2V6gRtPGlT2QuJ2AUOlj863kB4jOhmu7CmSsOU7gioKAAJijzM8QGWOleFjpTXCIDkabzA8zFvnV7mCEKjh+4AoqZNw1YhLNeBmmww1czhek1WOyT0LF4Ui33zrxTMVo1YTtHSEpjVPhMfvS/CZW4u5ICZPe8DFh5caeKsWWhQUVyWSdq07eUoH5Z6m9GtZUOzWoC4Kbf03BPhMUzVdiqV9GURgzFxU04Anga1oymGg5AkajEidIgagNyAZ+Z4VQcFxPpSco3XbKRxykuVpL7MurCRvXJws7Vo3MCfygCuawkm6YPyPgat4tWSckunZnxgakMBWoTgOlWpy/pS+MXyGT9w6V34eeVbD8O6V7+HdK3jB5THfh5rvcK2H4cK78N6VuBvIY44DpXnuPStgrLelROW9KHAPkMh7lXnuVa1WW1D8PrcDeQ0mmvbV5NeW3rxz3y0UV2+saV/BYx/MRfvHl0oLVXaq1GsaqxNxAtxETJt8t6uQtCZhtI+/lSbtTzqSXTQ4jckOXHZnSkQBJgTA5/fOguzS4Tp+KBvsbj4epkdbUGHSDIP315igMa8ZSFICgFpKFJkFKtYMkeJmdt9pp4oeHF6GrqAjT2hCAbyf5bd7w7wvQzjgCklJCt9I/qCyCT/SAlHnIE1qszGFaw6FQhJTITqWCg31d5RMdmFDbeyREkV83dU4HShawSpQld0p0mBpbBg6bbgD5VeELJ3BKxsxh4nUQo6ipJ5T+u586tIFeJ2vB6gQPSTFS1XpG7Jt32PsJkaEMl59KjaQgGLHYqPD9KinJWcU04WEONOIg6FKC0rHQ7g28P0V5hnWLXjYaUVNqQnuEjskpKQXCo8CDqv5QaAHtA+2vRhU6ElQA0pSCteoAhciUpj+9W4o895nt70ALTuI8j+tULwjZ3QmfCmObvhb7iwAAVk223ufM386GZWkKBVOkXVBgwLmDW6Vl+z1zANtYFDyAkpcUoRxTpWoEyeZ4cITXmU4Nh1uS5oUOYBSeYVxHjVn/AMcsIUh1nEkKYWCppKzte6uhIg/8Ztxk9kGASrScQ8ZMANiBfmTJUP8AbFcsm+TSfz8HTCUPHU0ZLGYkJcUlN0gkAwYMct6d+yzrTTocxKO4RCQTEk/XwNGe03suGSwwxqUXV94wICRHDhvNz+WhcG0tWH93xDUFtUEKEG0gRztxrrjJThSff7OBrjO2rRDNMwS7iwGExKhAAvdQEADf+9aDM8IlLiwlMQe8IiFfmtwvPnNZHBN4IOAJJSoG3fO/K9HOZ2suuKDnaAq/NeYsTO966fTY1FUiXrMzyuxszg9RNwlKRqWs/ChI3UfUW3JIAuRS7UvWl9IU0hdmjPe0JAEk/wBUyeBJPCKIcz5l0LQ4ktNICVIbSqe0WJ1F5envGNtgATAE1dhnHsyJUjsmWWVAalk7qmEJA+IgC+3C/Cmyu9MljVK0FI1EayoKPWP0EAeVJfZzFBaXG3BC0EyTFgZsFcQCDHStez7Owkg41u1jDSjciYJC7WrFNp937jkSoqXKTIJUbweYiCDcEXFH0+RQnf4GlG1sbJYvEVenD8hUMpwIVLhBEGyTYggRJ2nfaP7PWmYEmw/Sqxk2tnLJU6QG1gulTVhY4VY/mQbShZQClfwd4BShzTJiPu9FsYht2dBIUBJbWNKwOcfmT1FqCyRboMsGSKsUqbr1LY5UwdYqKGL05CytnBFQkCpvYIp3FazB4QBIEcKFzZkzMiANo3PMn9qCY7jSMq40NuNVlA5UXiGQXEkyIVcjkd5neoYxpCPhWViN9MeW9Z9grQCpAqkIFFKTVWitRrLm8OZukqEx3SD6ESKX4nHqbcCPdXlA/wAoJPj3QfQiaAzHCuCfd3VJWBPZkylXhq2V923rzE5pjtDRR2/bNkAOEflCTuFfEYMGdzXn44YqtP8Aa2evkedva/T1+qGTeMLSNTqZw6nCJUpIeZUoyQREltRJF02PLenuIbwxb7VsrCeMqSozMQAEiOJG/lM18xzRC3Spcq1SVLBQsXPeJuLXrT+zLTacNrQtzt9SQWwlPZ6EkXWVbmNQ2MT6VlCDW6IY5Zft/wDA7CYxtwqCFXTeFWMTEjgfs8DBTrSkkpUkpI3BBB9DWbYyN9CytDqRBOnuwdO4TqH7GnWHzHFJQntW2sQUgghS1aomYSs9b3PGuWUMb/izvhPIv5IvmqsThEPJ7NRAkyJ1bi9im4NudF4XGMLSe1acYWJJU2kuoi5jSTJgRcRttQ+DxmFdX/DxA0hSTqUkpVBMEgC4IE+vGk8cltFVNPsS5rmThJQ4zLZdWuAUpQFqIOsSJSRvoJTc870jbdWXytUuXPeUSZG1ySa0mfZQlLhfS52jSlDtVNqSUkGwOkuLMz6SBVeGwTWpRTNzaI0kdBxB9edXjNJCzSfTHS0JFkmdISDxvpE340vx2bNJOj5j9aBxGapQnSgwSdxBvyF6UoxUjvAhQBCVpA2P5Vp2InYi49IEVTbOfJK9FuFxbqMW4WSkawnUTBlIiQJBuRapYpS1qBcNxZIEXJF59KFyxhzXqTAsRKhO9NDhF6wbLIun8sHnveOs1n3YiWiOBeAaTv3QAef+KFzXF6RCoKVbQYJHhy86apw6RwvsRw8hwpdjsEFDQeF0n9KnPv8ABfHpfkXP4106S2QgJEBIG/C5O/ypXl+OWjEIcV3lJVIk8ef6+VHKTAivPdglaVrEpsFiAe7P1po0lQmS27PoGW+2rLbSe0bcUvha/Z3l0W+HukRz40dnsvdmttq60FaVarKbSmbiPiggjxrIeyWHIeKiR2Smi0pwjuhKoTAJIg2PUSm1HYjNS2xh29ZWWtZCUwgpA1IQFHfSZmOItepwx1K4izna2YjMcIRiHAYPe1f9++PrUuxg91RFGrZJUVqEE+XnHXfzrw5e46QEJ6KVwA6869OPtRwy2xn7NZOHlpLqiWzJ0/zAEAyeAvMcYrRZ4pKXncM0UsoJ1tobASAGzp/LuojUTz0Eneah7OYLSlITPZoBAJ3Wo7kf07x41b7TYZIQl2IdSpGlYEkSqQSPzAwbcZPWhlo2JuwrD4NlTTZcBWUiSSVTeTCpsd6T5Q63767IHfukwISRv4THyFXYXGBaFKCSkwNZtA4EJ4kmPG/GpZS9DqZRpavvc6jPfXfe/UAbc65YSqR2ZY8o0jS6QATyvz+VZDH4px1SiVONsr0pAJg6VEIkJ3Ennw1cq3bTeoSmCOhFZnE5EsvwltRBWCVFJAEGRB48pq2SetHJihvaNBmKGW20BxKFNtaQlJSPy2SEjh5UmxKELxKVpcUlalBRbsUgIT3lIO6QQAgwB8d6IzpDqG4BkAFSkqvZN4B/zQPsyA48pak94NADwUqSP/Ivx1VLFuSOjK6ix86mq2yJ3o5xrnQD7iGo1mJ4fXwArvUkeXxNDhsWCBPxCgcwxuqwBMGDaPSYnypLic+bbQlakOAKnTKYmN4Mx869w2f4daNeqByPxeQ41k0FqVdF76JoVTVFM4lDglBkfMeNSUgVQmJsCyvQAv4gVDxAUoJPmmD51YpmmJbqPZVqNZksW5C5B4C9GYLElVjuKUlV6my4UmRXhOOj6VS2Om8QCSOIqeqkzaiDPGr8KVkzcn9ONDiNzGajXhNVMtlxxKNYQDbUraeE+JgedSx2GWgltfdVsfCd+o60KC5I5R5+FZr/AOvJD8JWoJIK7DYagNAPgT8t612HVpaSgKTC1d8ykkgCwHrM8KExbae3IbnSEC0yRI4z8MlMgnl0t0xxTirXycL9ZilJp/AP7skJIQiL6ibm21+m3rQ+LzXsgAUSVEm0AcByub0ybx5aK0AgGIlQkKQYKlAfmSlJgxuZ5XBU0jEIlLboTIAKkhJkie7cyI41nCUVbNHPDI2lr6/IjQW3J7qhCZuQb8DP9qlhsODeflR+KwyEBSGgTqIkmCYTPdEbi8zUstatB2+nOlch1EIy/ALX8JhI3JsB4nj4CmCMEyDKnCocYGnym9CP4gwEpskcP1PWotuncyQCJjrw8bH0rlySm+jsx44VsaY/AsNKKSFHiJO4O0QB1HlSHNMS3EJTed5PpenWeYdvEKL7bwC9IGlVrDh8yfM86y+NwhRBcKYNxBn5b0MSk+2wSlGukB5g1ssbWmOhmrEJBInYxP34fpRruGUlKdaCkLunUI1DwP2b0oWooOmLE2vw3rriuS0ccnTNJlCg2qQNTZglIsbTcG448r1zoK/iAgbwLmTPGeVdkxlGo8TbwTb6zTBzTIGxVI8SBP0BPlXZDHFbo5pSbEGcOalDaOFdiHtLYbTx38OPrV+b4KFIUB3Zv0VwI8b/AGaVIxIUo+NvK1GUtiqI3wGYOpgBRgWg3+tOHMcX1anUgwZP5BwuYjkkTySBwpJgUFakpSJJMCnebZGtKFNSO+AUq4SCDpPI2+71OU49PsdQYPmGcYcQhtsubqhJAQVHjIkqgW2HjytynMGHoTBS5eUG4ITc6V8+hA48quylaJ0NJDLgA1t7Ltxn86eII58KLRgglasU+tOsCJNkNpiIHFRgxJueQrnkkXjNx0X4ZRCwoeYFhHIcvGtozgU6ZSetyVfrWKyrHtOqOklHZxrC06CEmSFmSbQJ8N6b4D2oZdcLTS1OQkqUuNKEwQALgEkyfSlQ06fQzfy8rNwhQ2Nzt4ERSPGZX7o1iHmkKSpKFaZIUAEyQRva5VB+lQzT2mSyoJAcWomNLYkmdheBJ5CTtarMRnPbYd9tPfX2akLa1oCxqCgbgqTI8eF6aLom1fYp9kA+IC1Kcbcb7UlRJ7NZWoBIJ31JAVHn4y9pmVhWuLCCLWsePnUfZfMUnDMpKHQUhSdZQrsz31EFKxItMGY2o3OcxHYrAi9jzg72+VdMH7Tlyp87MG+MRilkCDpnn1JjfgD9xUcNlTrYKymQACSCLA7TxrR+zuMDLqhIIVEg3vcbxtRGfZqThkNdkkOOqADfdMJSsEKskC5CRsNzyp49gfQX7PYMhvWbFcEDoNj5yflTTTVr6wkSR4Cgxit5TaRsdpmLeRrps4nt2XBFAY3E6VQCLD+/7U0bvcbVmvaJtwPSmYKQbCf6f0ot6DGr2ZkRNWA1U6EhAUlRmYIM+okVUHTXinv2GhdeNOHXufKhkuTU6xrCcwxHZiXDM2gd4mfDc1crOS6yhGuSkEhRE8QANwTHG94FI8xbUpSEpN1HyAF9RPCN6szLGtwENgynZQ3/AMGng4xabFlGeSMorQwwOKUlvUoJXuYMgAzCRCYjc7cqBxGPcMBsy5qjULTY256RJ9KFDLmhwCDYK1TAkybTuT4VJLTrKA4QCZAJuTe9zsP710SyNLRw4vTpy9wYctxC0NLaS53QpP5heU8eHj0p1gcreCSrEO2FyEKUFDkNSSCDttQuTe2ShZYkeEnz/wA1d+NJUFJiSpZWTPExYCNhFQeWWzuXp8evktXigBCAUhRCTclRBN5O/lXpxqTKGWylI3UZKlHlJ2FUhEqCp4z5ja1GPrJ3NRXRWbFyzTLIx2qH2YvpSoeNyPoPWg3knofG9e5SEoxLbhMJSdShfgCBHO5Bjxo8LEeQocnTIF6L9nM40O9+ACPiJgDSCbk0ZmjSS4pTcaSZEWTsJgRa80AUjkPStJKnFhT5O7Oz/MDiSparIQf4Z4nqZ4G1J04VLkAxJkid+H96Y4ttayltsAqJkgmBA4Tw/tRWTezr7i3EPoCEASlSTJSrhoVseZ4Vk6j9Czir0RYyd8NgpWkIACSmOG0zzofM8Q7KYgqkFISklRMmAADfciBzp0zjlNIW098SBIKRZzvACBwVf4fSlqcucKu1cTCjOlPBPIDr1rY8uVt8noScIVoqdy7Gr0jsnLiYKNInqTt5mqE5IlizqTq6kEf8dJrQZfn7qGZKg9bcm4P8pI/W9BY5918ysADgAD+tUU5N76EcKQwwj+HwuFU+huVhNtRJJVsEzwEjhRWbrK3ACQEpSCVcLiSfCspnySjDpH8y/oCY6XIpuWMK8whTjsNITpTqWELJbSEwEkwo2j6VlFXZn0dglsYvtG9QCm/9JQOlywutBPCeHmdxQ7mZrewbK1o1qRikIdSQEpXCSU6jsAZSDwmuwv4c6n+KhDIQQlA7Ulak7kq0E3knmetMWnssSyvDh4KbWSopGpZkxEFKZtpEeFZsNFGfNuMtPOOwleKdbQ6G+8G2kggwSO8SBGw+KrsocaVisSWY0aGQiBAKUgoOnmkaQJooYnDFrsljEvIIg6mcQs227wQII5iDUG8dhUlBbw+I1JT2YKWHR3OStUBQ496YJmgYBxGHbIeR24L7jh030uJuUpbHEI0kidoUTsapyhhCHEJSlZWEupdWAAj4E92ZugQkJgReedFP5jhcTu06opJkdgtSrpKblAMfFMTwojA6W2VhDbyAEqXKkBCAUoE7m2opJi91GmQGSycRl+H0/wAqpA561SfWhHkkkAElW2wPyP34Vd7OOH3JpIacXZV06NI76t9SxyqGDxAKlLSCoDcpWyQJ56XDFPFkpx2xe1ld1CNB0lV/zEaRpTxNpNvLouycBOJSp2QkKG/IXT6GDT05mUqKlokpkBRjULQNlxtaYJjjSBeNAuRaDwBGxEEHntPOuiDVkZrVH0XHJBKTaBIkdeP30qh1KFWgBXA/pWbazVYwYUCdWrRqPe0g31HykX6VP2axzzyFJCoCZ/iaiTqUZ+HbafQWqvKjm4DjBvhJg7HgOBFGKe6CkWXvFxAXPekzNrpUUnbYyKdxTqQso7PnqdOiFCY2HDe5sd4j0odzDKB+Ekc+nOqyT5z9x0q73hVq8ez36RSDU0KqKxJmI6dauabkgczvyrWIzxTIV0I4jrao4XLiA5YEoQpw9UpEmIvPSrmXEq+EG25NgTyA4QIv16U0wuWuqR2iEakGQobEpTudRIAB71jvyoStD45WqFOV4YrR2iidA4cCRYeMD60zTgisEuGAfhb2nlbntRmCxmGCCLhIIhMd4EbjlQ+eY5SVKSW+zUmISsBSik/mlKoSN9p2pHklKVl444wjQjXhiCAUSrkZgeVeM4UgxRbaysgz2hNoNo8BwF9+lMPd9rAHpVU/shJJ9EsC2aOcw/KostxHW9FovQYjYOnDcTwrwYITNFY3/TVe+k/Sr8Xh1FpwgKA0nvhJhNt5ttbjTK2TegXCtFUpHOJ5VVmeA7NIVqBJMEAQPLnU/ZrCYhcuaSpAJEjSgTa8Kc5chxqzMAVqE7CtOLTNCQiGN7B3XvAiOnTrxrTr9pGew1JO424ikxy9DiriTqJHUTtVuKyVapslCCI5qjoBYUuvkZ7Y0yl7tNBUBdIJ+R+tEP5gjtexKdo71oBNwCKlkeE0yTa0Co5nlYWoqAEmJnpP7/IUAXbFmMYdT3UhhoEkwNbpM8Y7oBM9aCXhHFfFinJFu4lLY9Ab00ThVJPe25k3nle/nTHDlIRA33PiadMD0Yj2iwC2m0rD7q0KVoKVrJ70KOwgRApz7HZXhVMIWtpC3FKUFFY1bKIASk2AiKu9rGErwqyQSUlKxHA6ggnwhSq8y3FAIwxg2bbsFECQkDbxB9aerFb0X+za21MKecbZQErckhttMITzgDrUfZjPHHl4lSyEtNQUpCIISSs3AGoqCUbUmy9/Us4IiGziXHFngW0woN+BUi/lTHDPBC80UByWOuoOE/X50GgjTInFOFxxOLViG1GEpKdJQrcg7cIiwHSiBnLJDp7QKDP+ppk6d72FxY3HI8qyygWMpGmy3194jkZ49UISP+RphkeA1PNlpooYGG7FalI0dspQMmD8YmDqjh4UKMM8RjEdkXkrK0AFUpv3U7wJ4XkdKDzFtt1gKU+E4Y95akyVKIkBI8FAGLkkAUhw2YFrLFtkQvtFsgdCApZPgCoeYq3MsL7u7gWQlxYQA6pIglTilyoJFhI0wOkdTRSMdnmNjBNnDL/gyW1gAE/DISueBgyDvI50K/kC2FsdmtWpZ0rUACE7H4eKY1EzawpyGC2jFPYpGht9xB7JJBKO/GslNtV0qtfuTvavMK6tJVh3Fhakp1tuW/itHY9SPnB5SWQrf0BZ1h5USlQUCdoI/t86Su4JUQBv6RvHjtWk1iaNx7EMIITsFEx1gyatF0c0kfP3sYpAKCohNiRJAJ+GTHG9aHK1Kfw7oBCC5K29HdTp7TQUKA/MLX9drr2kgE9qnRPwkwJBVuoHYQSYtsOlaPOMNh2H8M2kJbQUqVYgBKSTpI/3QT6VRtnNOVOkhinTHdiNIIFvhItbh/aj0bDwpF7MysLXIIs2mDM6CqV+BUVR4TWgpuQ1WfLiqa80mLUeW0x8ABirMNh5jYV5VntWUtMg1bBbIIjaRx6cOPSnWG93w+pbjiJ090ETBP5gk/EReBSFjHpTqKNa31EwrSo6Z3I5qM3PCY5yY32Co17hS26kOJbP+nJG5m8gb3EEjyFaTE512WEDCbKHd6mZJM9aFw3sqtUrfJTNwEkEz/UYI9JovGeziY1NqUVWsoggieZFj8qLkm+wVUaSB8swAcR2zg02G3cKiLg2sbBNyL0VnOMQ+EqV8diAZBg3jqJ+tSewbwlOrUk8z9RtNULYUFAKVPGBw+VZSEoJTiNageMRMAR4RRrbad5k0Ayzew3plhWaFjW+gltiaZZflSF61LWpCUCTp09ZnUk8uFVhIEaa8x+LKWHW0zqW2rTG5JER43NNj3ISekZTEOFwE9o4GyTaTYTYGIk7VtMkypv3QLeK16klZCnHCNO4GnVGwB2rAOF8NEFhYSCEklKviJgGYvJEcrgcRW5bzpoYVLBUEr7EI0mxns42PrXXX0RlQu9ms5JbLDbSiqXDASUjSVEggq2EKG9EPYdYMLQUHgCUG3/EnrvQfsdjUNlxStzAHQbn9PSmySXsQvvnRAIACbWSIkjxNLONgi6FrTcGmOGfkkEWivH8LcxNSw7UVDiUstfxJSUgc7+H39KsU/AJ6TQ/ZyZmrOzopAfQM69IMiD6jyqLBt414+BMcBVqEiKdRFbK8czrZcQBJKDb1I+cUpwqUhtk6R8IBkqvwOxte9NkqgzqIj96VOYgJTAjSCYki0mYibiTTU0KpJ2mVZVhgnEuvaYQCsX4lSgCB5FVE4VgF/EtqnS62JI6AJn/ANE+VU6jBnYiLKBG/MAj/NFLU2FzKyNOkkATvP7UKGuylnBKcw3uqxpWkwkn4SQolJBHAiRT3K3sQUpS8yE6RBXrB1QIBCR+8b0C2poEELXYje+3lTcOyBFTmNFiNPs6k4tTihLMlwJNwXFbgjlN/QUZnWBU5ocbUEutK1JJ2MxKT6D7NH6qrUaW2FivNsO68wULDSVkgmFKIte1rE+PnShrLXkrZUSgBpOgAEk6e9q4bnUr5cq0T1BvIp0xbFjjZmw9K1OCTDaYPAfSkqETTbDqhIHKq2RoRe0xQh9tYw+tRSqe6mFE6QJJ+JSQk25K60Z7RnDlfvHYrW4WUpLKuyPZQNQBSNiZPE7da9z7Crd0FCgkpJN+sftWefyTFnXDoBXc95Vze6rX33606do58mNt6HXsglPujRSgolImRGoxJUOaSSYPKnBFBYE9m023voQlP/VIH6VYcRTJjtGPUne1eNC9TnxqTKe9Nq8s9UIRh0L060hWm4kTE2MTTJrDoAsAPAAUE2Yo5C6DZjk72mr7EbXqone9TZcAtQsYqWmx6Xig8PhRyFPAkKExUGMNQUwOIInA8U+lMMLhLXFEMojf6TReGKVgKSQQdiNj/f8AatyBQOMNG1LPawlhtsodWHF8IRASkX/LO5A34mtMlI4/vXz/ANuMcHMSYNkJQgDqoFZI/wCw+VdPpkpN2RyuhXi8S66NDj69JgkAwLEEW6EA099jsmQ68pStSglMqJUqSTZIJBngfSst2gv6V9D9gYDKlcVKPokAD5zXY9LRDti7M8AA6UtQhsGAB3iSLEkqk7z0p/g8qDSArUrUQJ2id4sKzDGKK3BO6iAfEnatzjDGgHiT9/OldjqgY4abxUDgjMVoewtEeFBuMmk4gchOrCkcKrcEA0zUmhnWp8q1AsThmrAij3WUjaqnUACmAJ8QBytsf1/SkjjYJKSBN7/7Zm0Xp/mBTBPSfv5VnnsTC9W8wSN5ChpUB1/eqQJzWtDFnBaLEGFCIMGFDb4duXmL8KkzEAngdKvA7HykfOgG8eQieIVOqBdOoSI5klMkchJ2qlWZXX/Vt4Cb/Op5Yu9B9LL2vn3Y3dTBtzjz4GmWUr1IPQ/I/wB5HlWZbx2oGTw+f+adeyjutToHJP1V+5qUk+OzodXobBJO1WaKugAVUb1IwK43eqkNajei1upBA3P8oufQVUtClCD3BySe95qG3l60UwNFrGHTO1XuYUcIqpAsOlXKVPCqWToGeZjj6UK60KLdmKGdJrcjcSgN172NSipRVFMVwMohFqJaZ2pYnEmiWsdFcPFnfyQz7H0ohrCja5++lJnMyir8Fncbmg4SNzih8xht+7P31opvBRcilbebk/moxvMxxNTakHkgssmbVa0xJ+v9qFbxfGavQ+JmkphsMVhhQWKwLiVF3Dka/wAzZs27HM/kciwWOgVIAglGJ4edEsOiKeCdgk9AmWZw28VoEtuIjWysQ4g9RxHJQkHnWDxHsnjnFlWlAkJIKljkBFpNgB61sPabLW3my6SpDrSSpDqLLSACSP6km/dPPhWVwHtQ8mzylWJ/iRIOwumLAahYV24oyjbh/ZzzaepCb2ky44Z5SNWpPdg/7hqg/O/SmPs37S9ijQRIKvrHPqKtxzrWJcQuEKCSkqSlerUlIIjRAUN+RNvGoYvPkAKT7m2g6S2hRSJSmwuhQtaeO6jvx6k3STRB9ujsJiwXgobawfKQa+iOhTqkBESmSZPA6fpFfLssB0Adne3e4mCf8cr0+weLUlSRqUCQTuQQBYCx6fOi0ZSPqIWrTCgAbXBvP6VWhf3zpFl2MUpCZJm8yb71f70QZ+tIPqg5TRmqVs0OvGk8f0qsv9a1Cly2elUYtkBMkE9Bz/avDievzoPMMUIjz+dMkBsU5itJBSG9Jg3KrGxAubC8elZd5L7awQmFRaSmLyOJjjWkzOVQtJuBBibg8utK3cI8T3jq3HxeO2/SPC8UVJIXhYHl/s1iHe+CgJ2EqM2tsAY2o5r2SWkqLq0QEKMIUokmO78SQIkfKjcndcZSEBCQncmSb21Dhc3v9aIdzcA/6iZPEGT/ALe6Db0qMs0rqOyscK7bL8pyTDdklegKKkgyokiYvaY58KK7XDYaQkBuRKoSTttMA8z86UnNhH8NtSzOwBSAd+v6UozDMHVyntG0KNkpQQFzIJBUJ0iAfzUtSk9/6PxUdmzfzNvmd4AAuTY2HHyvU0tOLEn+EngLaz1PBPzPQVi/ZYw+woaylYVKiLCEqATqm8nTI5xvFbpzE9alkjxdIZMoaTpOhKYmSTMkgQPHjx5VYr4tI3iT989vWoJeSnaJ5+c/qaocxwB3vU9mdBaQZsJjeuCzO1L15paNVQGcJG6po+4Ggh4lUkAm6QJBiJlRvbYxzlPOoPGCBBM8R5b+vyNCuZuDxFC/iQi6wfvlTbNSD1rAUBeTJt0j9/kaipaRvFLFZmDsT6H516nGdaNsPExBxwqH4jSHtq7tausSIPKx2rFzvXNYq+9Ju2NSS9TeMXmadjMOtGt5jWQRiKuTizSPDYyy0bhjNaOazIc6wLePohGY1N4CizI3qMwHOjMLjhzr56jM6vTm/Wh4GmHzJm1z7EKW0vS4EI0KKhEmwJEHkSLiNqwKMQvsu4VQBCjAAgmw25zxol7NypCk6twR60A1j1JTom3qPKuqCpEJStk/ekGzjKT1TKD8pHyokOCO4+sD+VaQtHp/+aB94B3A+n0rg4nhIpxbHOEUsbBsj+hUfJW3kBTFBJuUkddSdh/x+4rPNYkDjRKMxA40A2jX5fjlCO/YWj04qieNMRmCiT49PpqrEN55HHzgVaM7B/zQoPJGvdxpgQb+tCvZkoTBHoazgz/reh3c2CgZJn75UaByHj+YLPH78aqOOXEGDWeVmHWubx8bKijQLGmIxpO4G/Awr9qDcxqb3ckbwoHa3EXoF/FnoRQbjo5fM0dA5NDJWLZPf0rImLqSLxy0kxUvxRCfhQ2ORMqP/qfpSTUmIIMb/ESJ8LV4FRtpHlf1NakN5GOzmq1m+pSdo2T+1D4Eo1qUpaRCTpSDPCDJG3lz6UtUVHcz4mflVrASNzWrVLQvL3cj6FgMYEsthQEpSPIxeOR39TXjmaDhWRczYmqF5hUfEP5TU4jMx1FL8Rmk8azzmNodeKorEhXkY9XmPWqVY+eNI1Yioe8UeCNzHvvg/wA1JON5WrPnE157zSuAymaP3/rXfiB51mzi6j72aXgN5ACpA11dViB6DUga6uomJA1IGurqICQNSCq6uogJBde666uogO1mu1murqxju0NdrNdXVjHdoa97Q11dWMd2pqXamurqxju2Nd2pr2urGO7Y152xr2urGIl013aGurqxjztK8111dWMdrru0NdXVjHazXhXXldWMeFdRKq6uoBIlVRKq8rqATwqqJNdXUAkSa8murqBj/9k=" alt="">
+                    </div>
+                </div>
+                
+                <!-- Item 3 -->
+                <div class="gallery-item" data-category="team">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Squad Goals</h3>
+                        <p class="gallery-desc">The whole Mega Zenith team together</p>
+                    </div>
+                </div>
+                
+                <!-- Item 4 -->
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Perfect Shot</h3>
+                        <p class="gallery-desc">300m sniper elimination in Warzone</p>
+                    </div>
+                </div>
+                
+                <!-- Item 5 -->
+                <div class="gallery-item" data-category="events">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Gaming Convention</h3>
+                        <p class="gallery-desc">Representing Mega Zenith at GameCon 2023</p>
+                    </div>
+                </div>
+                
+                <!-- Item 6 -->
+                <div class="gallery-item" data-category="achievements">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Platinum Trophy</h3>
+                        <p class="gallery-desc">100% completion in The Last of Us Part II</p>
+                    </div>
+                </div>
+                
+                <!-- Item 7 -->
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Epic Battle</h3>
+                        <p class="gallery-desc">Defeating the final boss in Elden Ring</p>
+                    </div>
+                </div>
+                
+                <!-- Item 8 -->
+                <div class="gallery-item" data-category="team">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Gaming Setup</h3>
+                        <p class="gallery-desc">Our professional gaming station</p>
+                    </div>
+                </div>
+                
+                <!-- Item 9 -->
+                <div class="gallery-item" data-category="events">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Podcast Recording</h3>
+                        <p class="gallery-desc">Recording our weekly gaming podcast</p>
+                    </div>
+                </div>
+                
+                <!-- Item 10 -->
+                <div class="gallery-item" data-category="achievements">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Top Ranking</h3>
+                        <p class="gallery-desc">Reaching Diamond rank in Valorant</p>
+                    </div>
+                </div>
+                
+                <!-- Item 11 -->
+                <div class="gallery-item" data-category="screenshots">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Racing Victory</h3>
+                        <p class="gallery-desc">First place in F1 2023 championship</p>
+                    </div>
+                </div>
+                
+                <!-- Item 12 -->
+                <div class="gallery-item" data-category="team">
+                    <div class="placeholder-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Team Strategy</h3>
+                        <p class="gallery-desc">Planning our next move in Apex Legends</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <span class="close" id="closeModal">&times;</span>
+        <div class="modal-content">
+            <img class="modal-image" id="modalImg" src="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CONTACT US</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> adhilu495@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> 9778566144</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Gaming Universe</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>CONNECT WITH US</h3>
+                    <p>Follow us on social media to stay updated with our latest gaming adventures and events.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-twitch"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>QUICK LINKS</h3>
+                    <ul class="contact-info">
+                        <li><a href="index.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Home</a></li>
+                        <li><a href="review.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Reviews</a></li>
+                        <li><a href="members.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Members</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Mega Zenith. Designed for elite gamers, by elite gamers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const numberOfParticles = 30;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 50 + 10;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 15;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('hamburger').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-filter');
+                
+                // Show/hide items based on filter
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalCaption = document.getElementById('modalCaption');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Since we're using placeholder icons, we'll simulate the modal with text content
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const title = item.querySelector('.gallery-title').textContent;
+                const desc = item.querySelector('.gallery-desc').textContent;
+                
+                // For a real implementation, you would set modalImg.src to the actual image URL
+                modalCaption.textContent = `${title} - ${desc}`;
+                modal.classList.add('show');
+                
+                // Prevent body from scrolling when modal is open
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Close modal when clicking on X
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Close modal when clicking outside the image
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Initialize particles when page loads
+        window.addEventListener('load', createParticles);
+    </script>
+</body>
+</html>
