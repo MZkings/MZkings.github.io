@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Reviews - Mega Zenith</title>
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #ff4d4d;
+            --primary-dark: #ff3333;
+            --secondary: #4d79ff;
+            --dark: #0f0f1a;
+            --darker: #090913;
+            --medium: #1a1a2e;
+            --light: #ffffff;
+            --accent: #00ffcc;
+            --accent-purple: #b967ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, var(--darker), var(--dark));
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20px) translateX(20px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(26, 26, 46, 0.8);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo::before {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--accent-purple));
+            margin-right: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 24px;
+        }
+
+        /* Page Content */
+        .page-content {
+            margin-top: 100px;
+            min-height: calc(100vh - 200px);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--light);
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: linear-gradient(145deg, rgba(26, 26, 46, 0.8), rgba(15, 15, 26, 0.8));
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Review Cards */
+        .review-card {
+            padding: 25px;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .review-game {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-right: 15px;
+        }
+
+        .review-rating {
+            color: gold;
+            font-size: 1.2rem;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .review-platform {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reviewer {
+            font-style: italic;
+        }
+
+        .review-highlights {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .review-highlights li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .review-highlights li::before {
+            content: '•';
+            color: var(--accent);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--medium);
+            color: var(--light);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to top, var(--darker), var(--dark));
+            padding: 60px 0 30px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 50px;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .contact-info {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                background: rgba(26, 26, 46, 0.95);
+                backdrop-filter: blur(10px);
+                width: 250px;
+                height: calc(100vh - 70px);
+                flex-direction: column;
+                padding: 40px 20px;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg" id="particles"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Mega Zenith</div>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Home</a>
+                    <a href="gallery.html">gallery</a>
+                    <a href="review.html">review</a>
+                    <a href="members.html">members</a>
+                    <a href="sub.html">our full details are this!</a>
+                </div>
+                <button class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container page-content">
+        <!-- Reviews Section -->
+        <section id="reviews">
+            <div class="section-title">
+                <h2>GAME REVIEWS</h2>
+                <p>Honest and in-depth reviews from our expert gamers</p>
+            </div>
+            
+            <!-- Filter Options -->
+            <div class="filter-section">
+                <button class="filter-btn active" data-filter="all">All Games</button>
+                <button class="filter-btn" data-filter="fps">FPS</button>
+                <button class="filter-btn" data-filter="sports">Sports</button>
+                <button class="filter-btn" data-filter="battle-royale">Battle Royale</button>
+                <button class="filter-btn" data-filter="rpg">RPG</button>
+            </div>
+            
+            <!-- Reviews Grid -->
+            <div class="grid grid-2">
+                <!-- Review 1 -->
+                <div class="card review-card" data-category="fps">
+                    <div class="review-header">
+                        <h3 class="review-game">Call of Duty: Warzone</h3>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(4.5/5)</span>
+                        </div>
+                    </div>
+                    <p>An intense battle royale experience with smooth gameplay and excellent graphics. The Verdansk map offers diverse combat scenarios that keep matches feeling fresh even after hundreds of hours.</p>
+                    
+                    <ul class="review-highlights">
+                        <li>Excellent gunplay and weapon customization</li>
+                        <li>Large map with varied environments</li>
+                        <li>Regular content updates keep the game fresh</li>
+                        <li>Cross-play support expands the player base</li>
+                    </ul>
+                    
+                    <div class="review-meta">
+                        <div class="review-platform">
+                            <i class="fas fa-tv"></i> PC, PlayStation, Xbox
+                        </div>
+                        <div class="reviewer">- Reviewed by MZ Dhilu</div>
+                    </div>
+                </div>
+                
+                <!-- Review 2 -->
+                <div class="card review-card" data-category="battle-royale">
+                    <div class="review-header">
+                        <h3 class="review-game">Fortnite</h3>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span>(4/5)</span>
+                        </div>
+                    </div>
+                    <p>Creative building mechanics and constant updates keep the game fresh. The crossover events with popular franchises are impressive, though the building mechanics have a steep learning curve.</p>
+                    
+                    <ul class="review-highlights">
+                        <li>Unique building mechanic sets it apart</li>
+                        <li>Frequent content updates and collaborations</li>
+                        <li>Colorful, appealing visual style</li>
+                        <li>Free-to-play with fair monetization</li>
+                    </ul>
+                    
+                    <div class="review-meta">
+                        <div class="review-platform">
+                            <i class="fas fa-tv"></i> PC, PlayStation, Xbox, Mobile
+                        </div>
+                        <div class="reviewer">- Reviewed by MZ Rayyutan</div>
+                    </div>
+                </div>
+                
+                <!-- Review 3 -->
+                <div class="card review-card" data-category="fps">
+                    <div class="review-header">
+                        <h3 class="review-game">Apex Legends</h3>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(5/5)</span>
+                        </div>
+                    </div>
+                    <p>Outstanding character abilities and team-based gameplay. The movement mechanics are some of the best in the genre, with fluid sliding and climbing that makes traversal feel exhilarating.</p>
+                    
+                    <ul class="review-highlights">
+                        <li>Excellent character-based gameplay</li>
+                        <li>Superb movement mechanics</li>
+                        <li>Innovative ping system for communication</li>
+                        <li>Regular seasonal content</li>
+                    </ul>
+                    
+                    <div class="review-meta">
+                        <div class="review-platform">
+                            <i class="fas fa-tv"></i> PC, PlayStation, Xbox, Switch
+                        </div>
+                        <div class="reviewer">- Reviewed by MZ Bruno</div>
+                    </div>
+                </div>
+                
+                <!-- Review 4 -->
+                <div class="card review-card" data-category="sports">
+                    <div class="review-header">
+                        <h3 class="review-game">eFootball 2023</h3>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                            <span>(3.5/5)</span>
+                        </div>
+                    </div>
+                    <p>Improved gameplay mechanics from previous versions but still lacks in content compared to competitors. The free-to-play model makes it accessible, but microtransactions are somewhat aggressive.</p>
+                    
+                    <ul class="review-highlights">
+                        <li>Realistic football gameplay</li>
+                        <li>Free-to-play model</li>
+                        <li>Improved graphics and animations</li>
+                        <li>Limited game modes at launch</li>
+                    </ul>
+                    
+                    <div class="review-meta">
+                        <div class="review-platform">
+                            <i class="fas fa-tv"></i> PC, PlayStation, Xbox, Mobile
+                        </div>
+                        <div class="reviewer">- Reviewed by MZ Dhilu</div>
+                    </div>
+                </div>
+                
+                <!-- Review 5 -->
+                <div class="card review-card" data-category="rpg">
+                    <div class="review-header">
+                        <h3 class="review-game">The Witcher 3: Wild Hunt</h3>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(5/5)</span>
+                        </div>
+                    </div>
+                    <p>A masterpiece of storytelling and world-building. The expansive world is filled with meaningful quests and memorable characters, making it one of the best RPGs ever created.</p>
+                    
+                    <ul class="review-highlights">
+                        <li>Incredible storytelling and characters</li>
+                        <li>Massive, detailed open world</li>
+                        <li>Meaningful choices that affect the world</li>
+                        <li>Outstanding expansion content</li>
+                    </ul>
+                    
+                    <div class="review-meta">
+                        <div class="review-platform">
+                            <i class="fas fa-tv"></i> PC, PlayStation, Xbox, Switch
+                        </div>
+                        <div class="reviewer">- Reviewed by MZ Shammu</div>
+                    </div>
+                </div>
+                
+                <!-- Review 6 -->
+                <div class="card review-card" data-category="fps">
+                    <div class="review-header">
+                        <h3 class="review-game">VALORANT</h3>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span>(4/5)</span>
+                        </div>
+                    </div>
+                    <p>A tactical shooter that successfully blends elements from CS:GO with hero-based abilities. Precise gunplay is rewarded, and the unique agent abilities add strategic depth to each round.</p>
+                    
+                    <ul class="review-highlights">
+                        <li>Tactical, skill-based gameplay</li>
+                        <li>Diverse agent roster with unique abilities</li>
+                        <li>Precise and satisfying gunplay</li>
+                        <li>Regular updates and balancing</li>
+                    </ul>
+                    
+                    <div class="review-meta">
+                        <div class="review-platform">
+                            <i class="fas fa-tv"></i> PC
+                        </div>
+                        <div class="reviewer">- Reviewed by Kingcobra</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CONTACT US</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> adhilu495@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> 9778566144</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Gaming Universe</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>CONNECT WITH US</h3>
+                    <p>Follow us on social media to stay updated with our latest gaming adventures and events.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-twitch"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>QUICK LINKS</h3>
+                    <ul class="contact-info">
+                        <li><a href="index.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Home</a></li>
+                        <li><a href="gallery.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Gallery</a></li>
+                        <li><a href="members.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Members</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Mega Zenith. Designed for elite gamers, by elite gamers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const numberOfParticles = 30;
+            
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 50 + 10;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 15;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('hamburger').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const reviewCards = document.querySelectorAll('.review-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-filter');
+                
+                // Show/hide cards based on filter
+                reviewCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Initialize particles when page loads
+        window.addEventListener('load', createParticles);
+    </script>
+</body>
+</html>
